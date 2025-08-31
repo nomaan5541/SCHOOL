@@ -1,0 +1,170 @@
+{% extends "base.html" %}
+
+{% block page_title %}{{ student.name }} - Profile{% endblock %}
+
+{% block content %}
+<div class="profile-container">
+    <div class="profile-header">
+        <div class="student-photo-section">
+            {% if student.photo_url %}
+                <img src="{{ url_for('static', filename=student.photo_url) }}" alt="{{ student.name }}" class="profile-photo">
+            {% else %}
+                <div class="no-photo-large">
+                    <i class="fas fa-user"></i>
+                </div>
+            {% endif %}
+        </div>
+        <div class="student-basic-info">
+            <h2>{{ student.name }}</h2>
+            <p class="student-class">{{ student.class_name }} - Roll No: {{ student.roll_number }}</p>
+            <div class="status-info">
+                <span class="status-badge status-{{ student.status }}">{{ student.status.title() }}</span>
+            </div>
+        </div>
+        <div class="profile-actions">
+            <a href="{{ url_for('add_fee_payment', student_id=student.id) }}" class="btn primary">
+                <i class="fas fa-money-bill"></i>
+                Add Fee Payment
+            </a>
+            <a href="#" class="btn secondary">
+                <i class="fas fa-edit"></i>
+                Edit Profile
+            </a>
+        </div>
+    </div>
+    
+    <div class="profile-content">
+        <div class="profile-sections">
+            <!-- Personal Information -->
+            <div class="info-section">
+                <h3>Personal Information</h3>
+                <div class="info-grid">
+                    <div class="info-item">
+                        <label>Full Name:</label>
+                        <span>{{ student.name }}</span>
+                    </div>
+                    <div class="info-item">
+                        <label>Father's Name:</label>
+                        <span>{{ student.father_name }}</span>
+                    </div>
+                    <div class="info-item">
+                        <label>Mother's Name:</label>
+                        <span>{{ student.mother_name }}</span>
+                    </div>
+                    <div class="info-item">
+                        <label>Gender:</label>
+                        <span>{{ student.gender }}</span>
+                    </div>
+                    <div class="info-item">
+                        <label>Date of Birth:</label>
+                        <span>{{ student.dob.strftime('%d/%m/%Y') }}</span>
+                    </div>
+                    <div class="info-item">
+                        <label>Blood Group:</label>
+                        <span>{{ student.blood_group or 'Not specified' }}</span>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Academic Information -->
+            <div class="info-section">
+                <h3>Academic Information</h3>
+                <div class="info-grid">
+                    <div class="info-item">
+                        <label>Class:</label>
+                        <span>{{ student.class_name }}</span>
+                    </div>
+                    <div class="info-item">
+                        <label>Roll Number:</label>
+                        <span>{{ student.roll_number }}</span>
+                    </div>
+                    <div class="info-item">
+                        <label>Admission Number:</label>
+                        <span>{{ student.admission_no }}</span>
+                    </div>
+                    <div class="info-item">
+                        <label>Admission Date:</label>
+                        <span>{{ student.admission_date.strftime('%d/%m/%Y') }}</span>
+                    </div>
+                    <div class="info-item">
+                        <label>PEN Number:</label>
+                        <span>{{ student.pen_number or 'Not provided' }}</span>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Contact Information -->
+            <div class="info-section">
+                <h3>Contact Information</h3>
+                <div class="info-grid">
+                    <div class="info-item">
+                        <label>Phone Number:</label>
+                        <span>{{ student.phone_number }}</span>
+                    </div>
+                    <div class="info-item">
+                        <label>Address:</label>
+                        <span>{{ student.address or 'Not provided' }}</span>
+                    </div>
+                    <div class="info-item">
+                        <label>City:</label>
+                        <span>{{ student.city or 'Not provided' }}</span>
+                    </div>
+                    <div class="info-item">
+                        <label>State:</label>
+                        <span>{{ student.state or 'Not provided' }}</span>
+                    </div>
+                    <div class="info-item">
+                        <label>Pincode:</label>
+                        <span>{{ student.pincode or 'Not provided' }}</span>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Bio -->
+            {% if student.bio %}
+            <div class="info-section">
+                <h3>Bio/Notes</h3>
+                <div class="bio-content">
+                    {{ student.bio }}
+                </div>
+            </div>
+            {% endif %}
+        </div>
+        
+        <!-- Fee History -->
+        <div class="fee-history">
+            <h3>Fee Payment History</h3>
+            <div class="fee-table">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Date</th>
+                            <th>Amount Paid</th>
+                            <th>Total Amount</th>
+                            <th>Percentage</th>
+                            <th>Method</th>
+                            <th>Remarks</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for fee in fee_history %}
+                        <tr>
+                            <td>{{ fee.payment_date.strftime('%d/%m/%Y') }}</td>
+                            <td>₹{{ fee.amount_paid }}</td>
+                            <td>₹{{ fee.total_amount }}</td>
+                            <td>{{ fee.percentage_paid }}%</td>
+                            <td>{{ fee.payment_method.title() }}</td>
+                            <td>{{ fee.remarks or '-' }}</td>
+                        </tr>
+                        {% else %}
+                        <tr>
+                            <td colspan="6" class="no-data">No fee payments recorded</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

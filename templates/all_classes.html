@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+
+{% block page_title %}All Classes{% endblock %}
+
+{% block content %}
+<div class="classes-grid">
+    {% for class_info in classes %}
+    <div class="class-card" onclick="window.location.href='{{ url_for('class_students', class_name=class_info.name) }}'">
+        <div class="class-icon">
+            {% if class_info.name in ['Nursery', 'LKG', 'UKG'] %}
+                <i class="fas fa-baby" style="color: #f59e0b;"></i>
+            {% else %}
+                <i class="fas fa-graduation-cap" style="color: #3b82f6;"></i>
+            {% endif %}
+        </div>
+        <div class="class-content">
+            <div class="class-name">{{ class_info.name }}</div>
+            <div class="student-count">{{ class_info.count }} Students</div>
+        </div>
+        <div class="class-arrow">
+            <i class="fas fa-chevron-right"></i>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+
+<div class="class-actions">
+    <a href="{{ url_for('add_student') }}" class="action-btn primary">
+        <i class="fas fa-user-plus"></i>
+        Add New Student
+    </a>
+</div>
+{% endblock %}

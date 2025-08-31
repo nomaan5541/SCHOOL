@@ -1,0 +1,102 @@
+{% extends "base.html" %}
+
+{% block content %}
+<!-- Statistics Cards -->
+<div class="stats-grid">
+    <div class="stat-card">
+        <div class="stat-icon">
+            <i class="fas fa-book" style="color: #3b82f6;"></i>
+        </div>
+        <div class="stat-content">
+            <div class="stat-label">1st CLASS-7th CLASS</div>
+            <div class="stat-value">{{ stats.classes }}</div>
+        </div>
+    </div>
+    
+    <div class="stat-card">
+        <div class="stat-icon">
+            <i class="fas fa-money-bill-wave" style="color: #10b981;"></i>
+        </div>
+        <div class="stat-content">
+            <div class="stat-label">fees</div>
+            <div class="stat-value">{{ stats.fees }}</div>
+        </div>
+    </div>
+    
+    <div class="stat-card">
+        <div class="stat-icon">
+            <i class="fas fa-users" style="color: #8b5cf6;"></i>
+        </div>
+        <div class="stat-content">
+            <div class="stat-label">Registered Students</div>
+            <div class="stat-value">{{ stats.students }}</div>
+        </div>
+    </div>
+    
+    <div class="stat-card">
+        <div class="stat-icon">
+            <i class="fas fa-exclamation-triangle" style="color: #f59e0b;"></i>
+        </div>
+        <div class="stat-content">
+            <div class="stat-label">Fees due</div>
+            <div class="stat-value">{{ stats.dues }}</div>
+        </div>
+    </div>
+</div>
+
+<!-- Recent Activities -->
+<div class="recent-activities">
+    <h2 class="section-title">Recent Activities</h2>
+    <div class="activities-table">
+        <table>
+            <thead>
+                <tr>
+                    <th>DATE</th>
+                    <th>ACTIVITY</th>
+                    <th>STUDENT</th>
+                    <th>AMOUNT</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for activity in activities %}
+                <tr>
+                    <td>{{ activity.payment_date.strftime('%Y-%m-%d %H:%M') }}</td>
+                    <td>
+                        <span class="activity-badge fee-payment">Fee Payment</span>
+                    </td>
+                    <td>
+                        <a href="{{ url_for('student_profile', student_id=activity.student.id) }}" class="student-link">
+                            {{ activity.student.name }}
+                        </a>
+                    </td>
+                    <td>₹{{ activity.amount_paid }}</td>
+                </tr>
+                {% else %}
+                <tr>
+                    <td colspan="4" class="no-data">No recent activities</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<!-- Quick Actions -->
+<div class="quick-actions">
+    <h2 class="section-title">Quick Actions</h2>
+    <div class="action-buttons">
+        <a href="{{ url_for('add_student') }}" class="action-btn primary">
+            <i class="fas fa-user-plus"></i>
+            Add New Student
+        </a>
+        <a href="{{ url_for('all_classes') }}" class="action-btn secondary">
+            <i class="fas fa-chalkboard"></i>
+            View All Classes
+        </a>
+        <a href="{{ url_for('fees') }}" class="action-btn secondary">
+            <i class="fas fa-money-bill"></i>
+            Fee Management
+        </a>
+    </div>
+</div>
+{% endblock %}

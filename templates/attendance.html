@@ -1,0 +1,94 @@
+{% extends "base.html" %}
+
+{% block page_title %}{{ class_name }} Attendance{% endblock %}
+
+{% block content %}
+<div class="attendance-container">
+    <div class="attendance-header">
+        <h2>{{ class_name }} - Daily Attendance</h2>
+        <div class="attendance-date">
+            Date: {{ today.strftime('%d/%m/%Y') }}
+        </div>
+    </div>
+    
+    <form method="POST" action="{{ url_for('mark_attendance') }}" class="attendance-form">
+        <input type="hidden" name="date" value="{{ today }}">
+        <input type="hidden" name="class_name" value="{{ class_name }}">
+        
+        <div class="attendance-controls">
+            <button type="button" class="btn secondary" onclick="markAllPresent()">
+                <i class="fas fa-check-circle"></i>
+                Mark All Present
+            </button>
+            <button type="button" class="btn secondary" onclick="markAllAbsent()">
+                <i class="fas fa-times-circle"></i>
+                Mark All Absent
+            </button>
+        </div>
+        
+        <div class="attendance-sheet">
+            <div class="attendance-header-row">
+                <div class="student-info-header">Student Information</div>
+                <div class="attendance-options-header">
+                    <span>Present</span>
+                    <span>Absent</span>
+                </div>
+            </div>
+            
+            {% for student in students %}
+            <div class="attendance-row">
+                <div class="student-info">
+                    <div class="roll-number">{{ student.roll_number }}</div>
+                    <div class="student-name">{{ student.name }}</div>
+                </div>
+                
+                <div class="attendance-options">
+                    <label class="radio-label">
+                        <input type="radio" name="attendance_{{ student.id }}" value="present" 
+                               {% if not existing_attendance %}checked{% endif %}>
+                        <span class="radio-custom present"></span>
+                        <span class="radio-text">Present</span>
+                    </label>
+                    
+                    <label class="radio-label">
+                        <input type="radio" name="attendance_{{ student.id }}" value="absent">
+                        <span class="radio-custom absent"></span>
+                        <span class="radio-text">Absent</span>
+                    </label>
+                </div>
+            </div>
+            {% else %}
+            <div class="no-students">
+                <p>No students found in this class.</p>
+                <a href="{{ url_for('add_student') }}" class="btn primary">Add First Student</a>
+            </div>
+            {% endfor %}
+        </div>
+        
+        {% if students %}
+        <div class="form-actions">
+            <button type="submit" class="btn primary">
+                <i class="fas fa-save"></i>
+                Save Attendance
+            </button>
+            <a href="{{ url_for('class_students', class_name=class_name) }}" class="btn secondary">
+                <i class="fas fa-arrow-left"></i>
+                Back to Class
+            </a>
+        </div>
+        {% endif %}
+    </form>
+</div>
+
+<script>
+function markAllPresent() {
+    const presentRadios = document.querySelectorAll('input[type="radio"][value="present"]');
+    presentRadios.forEach(radio => radio.checked = true);
+}
+
+function markAllAbsent() {
+    const absentRadios = document.querySelectorAll('input[type="radio"][value="absent"]');
+    absentRadios.forEach(radio => radio.checked = true);
+}
+</script>
+{% endblock %}

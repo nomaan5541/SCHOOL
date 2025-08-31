@@ -1,0 +1,81 @@
+{% extends "base.html" %}
+
+{% block page_title %}Fee Management{% endblock %}
+
+{% block content %}
+<div class="fees-container">
+    <div class="fees-header">
+        <h2>Fee Structure & Management</h2>
+        <p>Manage fee structures for different classes</p>
+    </div>
+    
+    <div class="fee-structure-grid">
+        {% for fee_structure in fee_structures %}
+        <div class="fee-structure-card">
+            <div class="class-header">
+                <h3>{{ fee_structure.class_name }}</h3>
+                <span class="fee-type">{{ fee_structure.fee_type.title() }}</span>
+            </div>
+            
+            <div class="fee-details">
+                <div class="fee-amount">
+                    <span class="amount">₹{{ fee_structure.amount }}</span>
+                    <span class="period">per {{ fee_structure.fee_type }}</span>
+                </div>
+                
+                <div class="percentage-info">
+                    <span class="label">School's Share:</span>
+                    <span class="percentage">{{ fee_structure.percentage }}%</span>
+                </div>
+                
+                <div class="calculated-share">
+                    <span class="label">School Amount:</span>
+                    <span class="share-amount">₹{{ (fee_structure.amount * fee_structure.percentage / 100)|round(2) }}</span>
+                </div>
+            </div>
+            
+            <div class="fee-actions">
+                <button class="btn-small primary">
+                    <i class="fas fa-edit"></i>
+                    Edit
+                </button>
+                <button class="btn-small secondary">
+                    <i class="fas fa-eye"></i>
+                    View
+                </button>
+            </div>
+        </div>
+        {% else %}
+        <div class="no-fee-structure">
+            <p>No fee structures found. Default structures will be created automatically.</p>
+        </div>
+        {% endfor %}
+    </div>
+    
+    <div class="fees-info">
+        <h3>Fee Collection Summary</h3>
+        <div class="info-cards">
+            <div class="info-card">
+                <div class="info-label">Nursery - UKG</div>
+                <div class="info-value">₹3,000 / month</div>
+                <div class="info-note">School Share: 35%</div>
+            </div>
+            <div class="info-card">
+                <div class="info-label">1st - 7th Class</div>
+                <div class="info-value">₹5,000 / month</div>
+                <div class="info-note">School Share: 35%</div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="fee-instructions">
+        <h3>How Fee Calculation Works</h3>
+        <ul>
+            <li>Parents pay a percentage of the total fee amount</li>
+            <li>School receives 35% of the amount paid by parents</li>
+            <li>If a parent pays ₹2,000 for a ₹5,000 fee (40%), school gets ₹700 (35% of ₹2,000)</li>
+            <li>Payment history tracks all transactions with percentage breakdowns</li>
+        </ul>
+    </div>
+</div>
+{% endblock %}
